@@ -1,0 +1,221 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #333;
+}
+
+.header-gcba {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header-gcba img {
+    max-width: 300px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 18px;
+    text-align: center;
+    margin: 20px 0;
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: 16px;
+    text-align: center;
+    margin: 15px 0;
+    text-transform: uppercase;
+}
+
+.form-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 5px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+}
+
+.radio-option input {
+    margin-right: 5px;
+}
+
+.photo-upload {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.photo-preview {
+    max-width: 90%;
+    max-height: 500px;
+    margin: 10px auto;
+    display: block;
+    object-fit: contain;
+}
+
+.add-photo-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Estas reglas CSS para impresión ya no son estrictamente necesarias para la generación de PDF con jsPDF/html2canvas,
+   pero se mantienen por si se usa la función window.print() */
+.photo-page {
+    page-break-after: always;
+    text-align: center;
+    padding-top: 100px;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* La marca de agua ahora se maneja directamente en jsPDF, esta regla CSS ya no es funcional para el PDF */
+.inspector-name {
+    font-size: 80px;
+    color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    font-weight: bold;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.signature-page {
+    text-align: center;
+    padding-top: 100px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 100px;
+}
+
+.signature-img {
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.btn-generate {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px 5px;
+}
+
+.btn-print {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px 5px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: bold;
+    min-width: 200px;
+}
+
+.info-value {
+    flex-grow: 1;
+}
+
+.marca-modelo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.marca-modelo span {
+    white-space: nowrap;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+
+    body {
+        padding: 0;
+    }
+
+    .photo-page, .signature-page {
+        height: 100vh;
+    }
+
+    .photo-preview {
+        max-height: 70vh;
+    }
+}

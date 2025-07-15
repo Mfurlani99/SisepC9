@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACTA DE CONSTATACIÓN - GCBA</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Librerías para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="form-container" class="no-print">
+        <div class="header-gcba">
+            <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires">
+        </div>
+
+        <h1 class="watermark-title">FORMULARIO DE ACTA DE CONSTATACIÓN</h1>
+
+        <div class="form-section">
+            <h2>DATOS GENERALES</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">FECHA INSPECCIÓN:</span>
+                    <div class="info-value">
+                        <input type="date" id="fecha" required>
+                        <input type="time" id="hora" required style="margin-top: 5px; width: 100%;">
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Dirección:</span>
+                    <div class="info-value">
+                        <input type="text" id="direccion" value="Corvalan 2117 (MATADEROS) entre Monte y Gregorio De Laferrere" required>
+                        <input type="text" id="caba" value="CABA" readonly style="margin-top: 5px; background: #f0f0f0;">
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ENTRE CALLES:</span>
+                    <div class="info-value">
+                        <input type="text" id="entre-calles">
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">RECLAMO:</span>
+                    <div class="info-value">
+                        <input type="text" id="reclamo" value="S00912947/24" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">TROQUEL:</span>
+                    <div class="info-value">
+                        <input type="text" id="troquel" value="92935" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Inspector:</span>
+                    <div class="info-value">
+                        <select id="inspector" required>
+                            <option value="">Seleccione un inspector</option>
+                            <option value="ROMINA MENDEZ">ROMINA MENDEZ</option>
+                            <option value="DAMIANI GABRIEL">DAMIANI GABRIEL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>VEHÍCULO</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">DOMINIO:</span>
+                    <div class="info-value">
+                        <input type="text" id="dominio" value="B367418" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">TIPO:</span>
+                    <div class="info-value">
+                        <input type="text" id="tipo" value="Particular" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">MARCA - MODELO:</span>
+                    <div class="info-value marca-modelo">
+                        <input type="text" id="marca" value="FIAT" required>
+                        <span>-</span>
+                        <input type="text" id="modelo" value="NO IDENTIFICABLE NEGRO RURAL" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>ESTADO DEL VEHÍCULO</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">AUTO ABANDONADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="abandonado-si" name="abandonado" value="SI" checked>
+                                <label for="abandonado-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="abandonado-no" name="abandonado" value="NO">
+                                <label for="abandonado-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">HABITADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="habitado-si" name="habitado" value="SI">
+                                <label for="habitado-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="habitado-no" name="habitado" value="NO" checked>
+                                <label for="habitado-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">TIENE TODAS LAS RUEDAS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="ruedas-si" name="ruedas" value="SI">
+                                <label for="ruedas-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="ruedas-no" name="ruedas" value="NO" checked>
+                                <label for="ruedas-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">QUEMADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="quemado-si" name="quemado" value="SI">
+                                <label for="quemado-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="quemado-no" name="quemado" value="NO" checked>
+                                <label for="quemado-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">DESMANTELADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="desmantelado-si" name="desmantelado" value="SI">
+                                <label for="desmantelado-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="desmantelado-no" name="desmantelado" value="NO" checked>
+                                <label for="desmantelado-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">POSEE FALTANTES EN INTERIOR:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="faltantes-si" name="faltantes" value="SI" checked>
+                                <label for="faltantes-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="faltantes-no" name="faltantes" value="NO">
+                                <label for="faltantes-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ENCADENADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="encadenado-si" name="encadenado" value="SI">
+                                <label for="encadenado-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="encadenado-no" name="encadenado" value="NO" checked>
+                                <label for="encadenado-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">VIDRIOS ROTOS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="vidrios-si" name="vidrios" value="SI" checked>
+                                <label for="vidrios-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="vidrios-no" name="vidrios" value="NO">
+                                <label for="vidrios-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">PINTURA DETERIORADA:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="pintura-si" name="pintura" value="SI" checked>
+                                <label for="pintura-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="pintura-no" name="pintura" value="NO">
+                                <label for="pintura-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">PUERTAS ABIERTAS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="puertas-si" name="puertas" value="SI">
+                                <label for="puertas-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="puertas-no" name="puertas" value="NO" checked>
+                                <label for="puertas-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">RUEDAS PINCHADAS/BAJAS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="ruedas-pinchadas-si" name="ruedas-pinchadas" value="SI" checked>
+                                <label for="ruedas-pinchadas-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="ruedas-pinchadas-no" name="ruedas-pinchadas" value="NO">
+                                <label for="ruedas-pinchadas-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ACUMULA AGUA O RESIDUOS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="residuos-si" name="residuos" value="SI" checked>
+                                <label for="residuos-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="residuos-no" name="residuos" value="NO">
+                                <label for="residuos-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">MOTOR EXPUESTO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="motor-si" name="motor" value="SI">
+                                <label for="motor-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="motor-no" name="motor" value="NO" checked>
+                                <label for="motor-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">FALTANTE DE AUTOPARTES:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="autopartes-si" name="autopartes" value="SI" checked>
+                                <label for="autopartes-si">Sí</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="autopartes-no" name="autopartes" value="NO">
+                                <label for="autopartes-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">DESCRIPCION DEL ESTADO DEL VEHICULO:</label>
+                <textarea id="descripcion" rows="4">LE FALTA UNA RUEDA. VENTILETE ROTO. SIN OPTICAS NI PARRILLA. SIN CHAPA PAT. DOMINIO VIEJO EN CRISTAL</textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>FOTOGRAFÍAS</h2>
+
+            <div id="photo-container">
+                <div class="photo-upload">
+                    <input type="file" id="photo-upload-1" accept="image/*" class="photo-input">
+                    <img id="photo-preview-1" class="photo-preview" style="display: none;">
+                </div>
+            </div>
+
+            <button type="button" id="add-photo-btn" class="add-photo-btn">+ Añadir otra foto</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="generate-btn" class="btn-generate">Generar y Descargar Acta PDF</button>
+            <!-- El botón de imprimir se mantiene, pero la funcionalidad principal es la descarga PDF -->
+            <button type="button" id="print-btn" class="btn-print">Imprimir (Vista Previa)</button>
+        </div>
+    </div>
+
+    <!-- El acta-container ya no es necesario para mostrar el acta, solo para la impresión directa si se usa -->
+    <div id="acta-container" style="display: none;"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
