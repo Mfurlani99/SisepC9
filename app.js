@@ -164,18 +164,20 @@ function applyWatermark(doc, inspector) {
 async function addPhotoWithWatermark(doc, imgData, inspector, isLastPage = false, signatureImg = null) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 10;
-    
+    const margin = 10; // Margen en mm
+
     const img = new Image();
     await new Promise(resolve => {
         img.onload = resolve;
         img.src = imgData;
     });
 
+    // Calcular las dimensiones de la imagen para que se ajuste a la página
     let imgWidth = pageWidth - 2 * margin;
     let imgHeight = (img.naturalHeight / img.naturalWidth) * imgWidth;
 
-    const availableHeight = pageHeight - 2 * margin - (isLastPage && signatureImg ? 40 : 0);
+    // Si la altura calculada es mayor que la altura disponible, reescalar por altura
+    const availableHeight = pageHeight - 2 * margin - (isLastPage && signatureImg ? 40 : 0); // Dejar espacio para la firma si es la última página
 
     if (imgHeight > availableHeight) {
         const scale = availableHeight / imgHeight;
@@ -183,8 +185,9 @@ async function addPhotoWithWatermark(doc, imgData, inspector, isLastPage = false
         imgHeight *= scale;
     }
 
+    // Centrar la imagen en la página
     const xPos = margin + (pageWidth - 2 * margin - imgWidth) / 2;
-    const yPos = margin;
+    const yPos = margin + (availableHeight - imgHeight) / 2; // Centrar verticalmente también
 
     doc.addImage(imgData, 'PNG', xPos, yPos, imgWidth, imgHeight);
     applyWatermark(doc, inspector);
@@ -196,13 +199,13 @@ async function addPhotoWithWatermark(doc, imgData, inspector, isLastPage = false
             sig.src = signatureImg;
         });
 
-        const sigWidth = 80;
+        const sigWidth = 80; // Ancho fijo para la firma
         const sigHeight = (sig.naturalHeight / sig.naturalWidth) * sigWidth;
         doc.addImage(
             signatureImg, 
             'PNG', 
             (pageWidth - sigWidth) / 2, 
-            pageHeight - margin - sigHeight - 10, 
+            pageHeight - margin - sigHeight - 10, // Posición vertical de la firma
             sigWidth, 
             sigHeight
         );
@@ -307,8 +310,18 @@ document.getElementById('generate-btn').addEventListener('click', async function
 
     const fechaFormateada = formatDate(fecha) + ' ' + hora;
 
-    let actaHTMLContent = `
-        <div style="max-width: 750px; margin: 0 auto; padding: 20px; font-size: 12px;">
+    // Crear un div temporal con dimensiones fijas para el renderizado de html2canvas
+    const tempRenderDiv = document.createElement('div');
+    tempRenderDiv.style.width = '210mm'; // Ancho de A4
+    tempRenderDiv.style.minHeight = '297mm'; // Altura mínima de A4
+    tempRenderDiv.style.position = 'absolute';
+    tempRenderDiv.style.left = '-9999px'; // Moverlo fuera de la vista
+    tempRenderDiv.style.backgroundColor = 'white'; // Asegurar fondo blanco
+    tempRenderDiv.style.padding = '10mm'; // Márgenes internos para el contenido
+    tempRenderDiv.style.boxSizing = 'border-box'; // Incluir padding en el ancho/alto
+
+    tempRenderDiv.innerHTML = `
+        <div class="acta-content-printable" style="width: 100%; height: auto;">
             <div class="header-gcba" style="text-align: center; margin-bottom: 15px;">
                 <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires" style="max-width: 250px;">
             </div>
@@ -357,23 +370,39 @@ document.getElementById('generate-btn').addEventListener('click', async function
             </div>
         </div>
     `;
-
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = actaHTMLContent;
-    document.body.appendChild(tempDiv);
+    document.body.appendChild(tempRenderDiv); // Añadir al DOM para que html2canvas pueda capturarlo
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
 
-    await html2canvas(tempDiv, { scale: 2 }).then(canvas => {
+    await html2canvas(tempRenderDiv.querySelector('.acta-content-printable'), { 
+        scale: 3, // Aumentar la escala para mejor calidad y mantener proporción
+        useCORS: true,
+        windowWidth: 794, // Ancho de A4 en píxeles a 96 DPI (210mm * 96dpi / 25.4mm/inch)
+        windowHeight: tempRenderDiv.scrollHeight // Capturar toda la altura del contenido
+    }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210 - 2 * margin;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
+        const imgWidth = 210 - 2 * margin; // Ancho de la página A4 menos los márgenes
+        let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
         applyWatermark(doc, inspector);
+        heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
+            applyWatermark(doc, inspector);
+            heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+        }
     });
+
+    document.body.removeChild(tempRenderDiv); // Eliminar el div temporal después de la captura
 
     const photoInputs = document.querySelectorAll('.photo-input');
     const signatureImgSrc = firmas[inspector];
@@ -392,8 +421,6 @@ document.getElementById('generate-btn').addEventListener('click', async function
             );
         }
     }
-
-    document.body.removeChild(tempDiv);
 
     const randomCode = generateRandomCode();
     const cleanAddress = direccion.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -424,8 +451,18 @@ document.getElementById('generate-btn-verificacion').addEventListener('click', a
 
     const fechaFormateada = formatDate(fecha) + ' ' + hora;
 
-    let actaHTMLContent = `
-        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    // Crear un div temporal con dimensiones fijas para el renderizado de html2canvas
+    const tempRenderDiv = document.createElement('div');
+    tempRenderDiv.style.width = '210mm'; // Ancho de A4
+    tempRenderDiv.style.minHeight = '297mm'; // Altura mínima de A4
+    tempRenderDiv.style.position = 'absolute';
+    tempRenderDiv.style.left = '-9999px'; // Moverlo fuera de la vista
+    tempRenderDiv.style.backgroundColor = 'white'; // Asegurar fondo blanco
+    tempRenderDiv.style.padding = '10mm'; // Márgenes internos para el contenido
+    tempRenderDiv.style.boxSizing = 'border-box'; // Incluir padding en el ancho/alto
+
+    tempRenderDiv.innerHTML = `
+        <div class="acta-content-printable" style="width: 100%; height: auto;">
             <div class="header-gcba" style="text-align: center; margin-bottom: 20px;">
                 <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires" style="max-width: 300px;">
             </div>
@@ -461,23 +498,39 @@ document.getElementById('generate-btn-verificacion').addEventListener('click', a
             </div>
         </div>
     `;
-
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = actaHTMLContent;
-    document.body.appendChild(tempDiv);
+    document.body.appendChild(tempRenderDiv);
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
 
-    await html2canvas(tempDiv, { scale: 2 }).then(canvas => {
+    await html2canvas(tempRenderDiv.querySelector('.acta-content-printable'), { 
+        scale: 3,
+        useCORS: true,
+        windowWidth: 794,
+        windowHeight: tempRenderDiv.scrollHeight
+    }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 210 - 2 * margin;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
         applyWatermark(doc, inspector);
+        heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
+            applyWatermark(doc, inspector);
+            heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+        }
     });
+
+    document.body.removeChild(tempRenderDiv);
 
     const photoInputs = document.querySelectorAll('.photo-input-verificacion');
     const signatureImgSrc = firmas[inspector];
@@ -496,8 +549,6 @@ document.getElementById('generate-btn-verificacion').addEventListener('click', a
             );
         }
     }
-
-    document.body.removeChild(tempDiv);
 
     const randomCode = generateRandomCode();
     const cleanAddress = direccion.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -528,8 +579,18 @@ document.getElementById('generate-btn-s-signos').addEventListener('click', async
 
     const fechaFormateada = formatDate(fecha) + ' ' + hora;
 
-    let actaHTMLContent = `
-        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    // Crear un div temporal con dimensiones fijas para el renderizado de html2canvas
+    const tempRenderDiv = document.createElement('div');
+    tempRenderDiv.style.width = '210mm'; // Ancho de A4
+    tempRenderDiv.style.minHeight = '297mm'; // Altura mínima de A4
+    tempRenderDiv.style.position = 'absolute';
+    tempRenderDiv.style.left = '-9999px'; // Moverlo fuera de la vista
+    tempRenderDiv.style.backgroundColor = 'white'; // Asegurar fondo blanco
+    tempRenderDiv.style.padding = '10mm'; // Márgenes internos para el contenido
+    tempRenderDiv.style.boxSizing = 'border-box'; // Incluir padding en el ancho/alto
+
+    tempRenderDiv.innerHTML = `
+        <div class="acta-content-printable" style="width: 100%; height: auto;">
             <div class="header-gcba" style="text-align: center; margin-bottom: 20px;">
                 <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires" style="max-width: 300px;">
             </div>
@@ -560,23 +621,39 @@ document.getElementById('generate-btn-s-signos').addEventListener('click', async
             </div>
         </div>
     `;
-
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = actaHTMLContent;
-    document.body.appendChild(tempDiv);
+    document.body.appendChild(tempRenderDiv);
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
 
-    await html2canvas(tempDiv, { scale: 2 }).then(canvas => {
+    await html2canvas(tempRenderDiv.querySelector('.acta-content-printable'), { 
+        scale: 3,
+        useCORS: true,
+        windowWidth: 794,
+        windowHeight: tempRenderDiv.scrollHeight
+    }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 210 - 2 * margin;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
         applyWatermark(doc, inspector);
+        heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
+            applyWatermark(doc, inspector);
+            heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+        }
     });
+
+    document.body.removeChild(tempRenderDiv);
 
     const photoInputs = document.querySelectorAll('.photo-input-s-signos');
     const signatureImgSrc = firmas[inspector];
@@ -595,8 +672,6 @@ document.getElementById('generate-btn-s-signos').addEventListener('click', async
             );
         }
     }
-
-    document.body.removeChild(tempDiv);
 
     const randomCode = generateRandomCode();
     const cleanAddress = direccion.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -628,8 +703,18 @@ document.getElementById('generate-btn-deposito').addEventListener('click', async
 
     const fechaFormateada = formatDate(fecha) + ' ' + hora;
 
-    let actaHTMLContent = `
-        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    // Crear un div temporal con dimensiones fijas para el renderizado de html2canvas
+    const tempRenderDiv = document.createElement('div');
+    tempRenderDiv.style.width = '210mm'; // Ancho de A4
+    tempRenderDiv.style.minHeight = '297mm'; // Altura mínima de A4
+    tempRenderDiv.style.position = 'absolute';
+    tempRenderDiv.style.left = '-9999px'; // Moverlo fuera de la vista
+    tempRenderDiv.style.backgroundColor = 'white'; // Asegurar fondo blanco
+    tempRenderDiv.style.padding = '10mm'; // Márgenes internos para el contenido
+    tempRenderDiv.style.boxSizing = 'border-box'; // Incluir padding en el ancho/alto
+
+    tempRenderDiv.innerHTML = `
+        <div class="acta-content-printable" style="width: 100%; height: auto;">
             <div class="header-gcba" style="text-align: center; margin-bottom: 20px;">
                 <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires" style="max-width: 300px;">
             </div>
@@ -666,23 +751,39 @@ document.getElementById('generate-btn-deposito').addEventListener('click', async
             </div>
         </div>
     `;
-
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = actaHTMLContent;
-    document.body.appendChild(tempDiv);
+    document.body.appendChild(tempRenderDiv);
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
 
-    await html2canvas(tempDiv, { scale: 2 }).then(canvas => {
+    await html2canvas(tempRenderDiv.querySelector('.acta-content-printable'), { 
+        scale: 3,
+        useCORS: true,
+        windowWidth: 794,
+        windowHeight: tempRenderDiv.scrollHeight
+    }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 210 - 2 * margin;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
         applyWatermark(doc, inspector);
+        heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', margin, position + margin, imgWidth, imgHeight);
+            applyWatermark(doc, inspector);
+            heightLeft -= (doc.internal.pageSize.getHeight() - 2 * margin);
+        }
     });
+
+    document.body.removeChild(tempRenderDiv);
 
     const photoInputs = document.querySelectorAll('.photo-input-deposito');
     const signatureImgSrc = firmas[inspector];
@@ -702,29 +803,9 @@ document.getElementById('generate-btn-deposito').addEventListener('click', async
         }
     }
 
-    document.body.removeChild(tempDiv);
-
     const randomCode = generateRandomCode();
     const cleanDominio = dominio.replace(/[^a-zA-Z0-9]/g, '').trim();
     const pdfFileName = `ACTA DE VERIFICACION EN DEPOSITO ${cleanDominio} ${troquel} ${randomCode}.pdf`;
 
     doc.save(pdfFileName);
-});
-
-
-// Botones de impresión (se mantienen, pero la funcionalidad principal es la descarga PDF)
-document.getElementById('print-btn').addEventListener('click', function() {
-    window.print();
-});
-
-document.getElementById('print-btn-verificacion').addEventListener('click', function() {
-    window.print();
-});
-
-document.getElementById('print-btn-s-signos').addEventListener('click', function() {
-    window.print();
-});
-
-document.getElementById('print-btn-deposito').addEventListener('click', function() {
-    window.print();
 });

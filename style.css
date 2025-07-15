@@ -10,80 +10,100 @@
     --bg: #f4f4f4;
     --card-bg: #ffffff;
     --border: #ddd;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     line-height: 1.6;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     color: var(--text);
     background-color: var(--bg);
+    box-sizing: border-box;
 }
 
+/* Header y Logos */
 .header-gcba {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px; /* Aumentado para mejor separación */
 }
 
 .header-gcba img {
-    max-width: 100%; /* Responsive logo */
-    height: auto; /* Maintain aspect ratio */
+    max-width: 250px; /* Tamaño fijo para el logo principal */
+    height: auto;
     margin-bottom: 10px;
 }
 
-.logo-sisep {
-    max-width: 60%;
-    margin-left: 60%;
-    margin-bottom: 10%;
-    margin-top: 0%;
+.logos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.logos-container {
-    max-width: 50%;
+.logo-sisep {
+    max-width: 200px; /* Ajustado para ser más pequeño y centrado */
+    height: auto;
+    margin: 0 auto; /* Centrar el logo Sisep */
+}
+
+/* Títulos */
+h1, h2, h3 {
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #000;
 }
 
 h1 {
-    text-align: center;
-    font-size: 24px;
+    font-size: 28px; /* Ligeramente más grande para el título principal */
     margin-bottom: 30px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #000;
-    padding-bottom: 10px;
 }
 
 h2 {
-    font-size: 18px;
-    text-align: center;
-    margin: 20px 0;
-    text-transform: uppercase;
+    font-size: 20px;
+    margin: 25px 0 15px;
+    border-bottom: 1px solid #ccc;
 }
 
 h3 {
-    font-size: 16px;
-    text-align: center;
-    margin: 15px 0;
-    text-transform: uppercase;
+    font-size: 18px;
+    margin: 15px 0 10px;
+    border-bottom: none;
+}
+
+/* Form Sections */
+.form-container {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 25px; /* Aumentado el padding general del contenedor */
+    margin-top: 20px;
 }
 
 .form-section {
-    margin-bottom: 25px;
-    padding: 15px;
+    margin-bottom: 25px; /* Aumentado para mejor separación entre secciones */
+    padding: 20px;
     border: 1px solid var(--border);
-    border-radius: 5px;
-    background-color: var(--card-bg); /* White background for form sections */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fdfdfd; /* Ligeramente diferente para secciones */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Aumentado el margen inferior de los grupos */
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px; /* Aumentado el margen inferior de las etiquetas */
     font-weight: bold;
+    color: #333;
+    font-size: 15px;
 }
 
 input[type="text"],
@@ -92,136 +112,455 @@ input[type="time"],
 textarea,
 select {
     width: 100%;
-    padding: 10px; /* Increased padding for better touch targets */
+    padding: 12px; /* Aumentado el padding de los inputs */
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 6px; /* Bordes más suaves */
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 15px;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
     border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.25); /* Sombra más pronunciada al enfocar */
     outline: none;
 }
 
-.radio-group {
-    display: flex;
-    gap: 15px;
-    margin-top: 5px;
+textarea {
+    resize: vertical;
+    min-height: 80px; /* Altura mínima aumentada */
 }
 
+/* Radio Buttons */
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px; /* Aumentado el espacio entre opciones */
+    margin-top: 10px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    cursor: pointer;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+.radio-group input[type="radio"] {
+    width: auto;
+    margin-right: 10px; /* Espacio entre el radio y su etiqueta */
+    transform: scale(1.2); /* Ligeramente más grande para mejor interacción */
+}
+
+/* Photo Upload */
 .photo-upload {
-    margin: 20px 0;
+    margin: 25px 0; /* Aumentado el margen */
     text-align: center;
+    border: 2px dashed var(--border); /* Borde más visible */
+    padding: 20px; /* Aumentado el padding */
+    border-radius: 10px;
+    background-color: #fcfcfc;
 }
 
 .photo-preview {
-    max-width: 90%;
-    max-height: 500px;
-    margin: 10px auto;
+    max-width: 100%;
+    max-height: 450px; /* Altura máxima aumentada */
+    margin: 20px auto 0;
     display: block;
     object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
 }
 
 .add-photo-btn {
     background-color: var(--secondary);
     color: white;
     border: none;
-    padding: 10px 15px; /* Increased padding */
-    border-radius: 4px;
+    padding: 14px 25px; /* Padding generoso */
+    border-radius: 6px;
     cursor: pointer;
-    margin-top: 10px;
-    font-size: 16px; /* Increased font size */
-    transition: background-color 0.3s;
+    margin-top: 20px;
+    font-size: 17px;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .add-photo-btn:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px rgba(76, 175, 80, 0.3);
 }
 
-.btn-generate,
-.btn-print,
-.btn-back {
-    background-color: var(--primary); /* Primary button color */
+/* Action Buttons */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 30px; /* Padding generoso */
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 17px;
+    margin: 15px 8px; /* Espaciado entre botones */
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    text-decoration: none;
+    justify-content: center;
+    min-width: 180px; /* Ancho mínimo para botones */
+}
+
+.btn-action.primary {
+    background-color: var(--primary);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+}
+
+.btn-action.primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(33, 150, 243, 0.35);
+}
+
+.btn-back {
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
-    margin: 20px 5px;
-    transition: background-color 0.3s; /* Smooth transition */
+    font-size: 17px;
+    margin: 15px 8px;
+    transition: background-color 0.3s, transform 0.2s;
+    min-width: 180px;
 }
 
-.btn-generate:hover,
-.btn-print:hover,
 .btn-back:hover {
-    background-color: var(--primary-dark); /* Darker shade on hover */
+    background-color: #ec971f;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(240, 173, 78, 0.35);
 }
 
+.btn-icon {
+    width: 22px; /* Iconos ligeramente más grandes */
+    height: 22px;
+    fill: currentColor;
+}
+
+/* Info Grid Layout */
 .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Ajustado para mejor adaptación en móviles */
+    gap: 25px; /* Aumentado el espacio entre elementos de la cuadrícula */
+    margin-bottom: 25px;
 }
 
 .info-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .info-label {
     font-weight: bold;
-    min-width: 150px; /* Adjusted for better alignment */
+    margin-bottom: 8px;
+    color: #555;
 }
 
 .info-value {
-    flex-grow: 1;
+    width: 100%;
 }
 
 .marca-modelo {
     display: flex;
-    gap: 10px;
+    gap: 12px; /* Aumentado el espacio */
     align-items: center;
+    width: 100%;
+}
+
+.marca-modelo input {
+    flex: 1;
 }
 
 .marca-modelo span {
     white-space: nowrap;
+    font-weight: bold;
+    font-size: 15px;
 }
 
-@media (max-width: 600px) {
-    .info-grid {
-        grid-template-columns: 1fr; /* Stack items on smaller screens */
-    }
-
-    .btn-generate,
-    .btn-print,
-    .btn-back {
-        width: 100%; /* Full width buttons on mobile */
-        margin: 10px 0; /* Adjust margin for mobile */
-    }
+/* Initial Selection Screen */
+#initial-selection {
+    text-align: center;
+    padding: 50px 20px; /* Aumentado el padding */
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-top: 60px;
 }
 
+#initial-selection .watermark-title {
+    font-size: 32px; /* Título más grande */
+    color: var(--primary-dark);
+    margin-bottom: 40px;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+#acta-type-select {
+    max-width: 450px; /* Ancho máximo aumentado */
+    margin: 25px auto;
+    display: block;
+    padding: 15px; /* Padding aumentado */
+    font-size: 18px; /* Fuente más grande */
+    border-radius: 8px;
+}
+
+/* Print Specific Styles */
 @media print {
-    .no-print {
-        display: none;
-    }
-
     body {
+        margin: 0;
         padding: 0;
+        font-size: 8pt; /* Reducir aún más la fuente para impresión */
+        color: #000;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
-    .photo-page,
-    .signature-page {
-        height: 100vh;
+    .no-print {
+        display: none !important;
     }
 
-    .photo-preview {
-        max-height: 70vh;
+    .form-container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+        background-color: transparent;
+    }
+
+    .form-section {
+        padding: 3mm; /* Reducir padding en impresión */
+        margin-bottom: 3mm; /* Reducir margen en impresión */
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    h1, h2, h3 {
+        margin: 2mm 0;
+        padding-bottom: 2mm;
+        border-bottom: 0.5mm solid #000; /* Borde más fino */
+        font-size: 11pt; /* Ajustar tamaño de fuente para títulos */
+    }
+
+    h2 {
+        font-size: 10pt;
+    }
+
+    h3 {
+        font-size: 9pt;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr; /* Siempre apilar en impresión para evitar cortes */
+        gap: 2mm; /* Reducir espacio entre elementos */
+        margin-bottom: 3mm;
+    }
+
+    .info-item {
+        flex-direction: row; /* Volver a poner label y value en fila para ahorrar espacio */
+        align-items: baseline;
+        justify-content: flex-start;
+        gap: 3mm; /* Espacio entre label y value */
+    }
+
+    .info-label {
+        min-width: 80px; /* Ancho mínimo para labels */
+        margin-bottom: 0;
+        font-size: 8pt;
+    }
+
+    .info-value {
+        flex-grow: 1;
+        font-size: 8pt;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea,
+    select {
+        border: none;
+        padding: 0;
+        background: transparent;
+        font-size: 8pt;
+        height: auto;
+        min-height: unset;
+    }
+
+    textarea {
+        resize: none;
+        overflow: hidden;
+        height: 20mm !important; /* Altura fija para textarea en impresión */
+    }
+
+    .radio-group {
+        display: inline-block;
+        gap: 5mm;
+        margin-top: 0;
+    }
+
+    .radio-group label {
+        margin-right: 5mm;
+    }
+
+    .photo-upload, .photo-preview {
+        display: none !important; /* Ocultar fotos en la vista de impresión del formulario */
+    }
+
+    /* Estilos específicos para el contenido del acta en el PDF (renderizado por html2canvas) */
+    .acta-content-printable {
+        /* Eliminar max-width y margin: 0 auto; ya que el contenedor padre (tempRenderDiv) manejará el tamaño */
+        width: 100%; /* Asegura que el contenido ocupe todo el ancho del tempRenderDiv */
+        height: auto; /* La altura se ajustará al contenido */
+        padding: 0; /* El padding se manejará en el tempRenderDiv */
+        font-size: 12px; /* Mantener un tamaño de fuente base */
+        box-sizing: border-box;
+        overflow: hidden; /* Asegurar que no haya scrollbars */
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .acta-content-printable .header-gcba img {
+        max-width: 60mm; /* Ajustar tamaño del logo en el PDF */
+        height: auto;
+    }
+
+    .acta-content-printable h1 {
+        font-size: 18pt;
+        margin-bottom: 10mm;
+        padding-bottom: 3mm;
+    }
+
+    .acta-content-printable h2 {
+        font-size: 14pt;
+        margin: 8mm 0;
+    }
+
+    .acta-content-printable h3 {
+        font-size: 12pt;
+        margin: 6mm 0;
+    }
+
+    .acta-content-printable p {
+        margin-bottom: 3mm;
+        word-wrap: break-word;
+        font-size: 10pt;
+        line-height: 1.2; /* Ajustar interlineado para mejor legibilidad */
+    }
+
+    .acta-content-printable strong {
+        font-weight: bold;
+    }
+
+    /* Asegurarse de que los inputs y textareas dentro del acta-content-printable no tengan bordes o fondos */
+    .acta-content-printable input,
+    .acta-content-printable textarea,
+    .acta-content-printable select {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        font-size: inherit !important; /* Heredar el tamaño de fuente del párrafo */
+        width: auto !important; /* Permitir que el texto fluya naturalmente */
+        display: inline !important; /* Para que se vea como parte del texto */
+        box-shadow: none !important;
+        resize: none !important;
+        overflow: hidden !important;
+    }
+
+    /* Ocultar elementos que no deben aparecer en el PDF generado por html2canvas */
+    .acta-content-printable .photo-upload,
+    .acta-content-printable .photo-preview,
+    .acta-content-printable .btn-action,
+    .acta-content-printable .btn-back,
+    .acta-content-printable .form-section h2:has(+ #photo-container), /* Ocultar el título de "FOTOGRAFÍAS" si el contenedor de fotos está vacío */
+    .acta-content-printable .form-section h2:has(+ #photo-container-verificacion),
+    .acta-content-printable .form-section h2:has(+ #photo-container-s-signos),
+    .acta-content-printable .form-section h2:has(+ #photo-container-deposito) {
+        display: none !important;
+    }
+
+    /* Asegurar que los radio buttons se muestren como texto "SI" o "NO" */
+    .acta-content-printable .radio-group {
+        display: inline; /* Para que no rompa la línea */
+    }
+    .acta-content-printable .radio-group label {
+        display: inline;
+        margin-right: 5px;
+    }
+    .acta-content-printable .radio-group input[type="radio"] {
+        display: none; /* Ocultar el input de radio */
+    }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    .form-container {
+        padding: 15px;
+    }
+
+    .form-section {
+        padding: 15px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr; /* Apilar en pantallas más pequeñas */
+        gap: 15px;
+    }
+
+    .btn-action, .btn-back {
+        width: 100%;
+        margin: 10px 0;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    .add-photo-btn {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    #initial-selection {
+        padding: 30px 15px;
+    }
+
+    #initial-selection .watermark-title {
+        font-size: 26px;
+    }
+
+    #acta-type-select {
+        padding: 12px;
+        font-size: 16px;
     }
 }
