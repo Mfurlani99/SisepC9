@@ -1,20 +1,47 @@
+/* style.css */
+
+/* Base Styles */
+:root {
+    --primary: #2196F3;
+    --primary-dark: #1976D2;
+    --secondary: #4CAF50;
+    --accent: #FF9800;
+    --text: #2d3748;
+    --bg: #f4f4f4;
+    --card-bg: #ffffff;
+    --border: #ddd;
+}
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    color: #333;
+    color: var(--text);
+    background-color: var(--bg);
 }
 
 .header-gcba {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .header-gcba img {
-    max-width: 300px;
+    max-width: 100%; /* Responsive logo */
+    height: auto; /* Maintain aspect ratio */
     margin-bottom: 10px;
+}
+
+.logo-sisep {
+    max-width: 60%;
+    margin-left: 60%;
+    margin-bottom: 10%;
+    margin-top: 0%;
+}
+
+.logos-container {
+    max-width: 50%;
 }
 
 h1 {
@@ -43,8 +70,10 @@ h3 {
 .form-section {
     margin-bottom: 25px;
     padding: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     border-radius: 5px;
+    background-color: var(--card-bg); /* White background for form sections */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
@@ -63,25 +92,24 @@ input[type="time"],
 textarea,
 select {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
+    padding: 10px; /* Increased padding for better touch targets */
+    border: 1px solid var(--border);
     border-radius: 4px;
     box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
+    outline: none;
 }
 
 .radio-group {
     display: flex;
     gap: 15px;
     margin-top: 5px;
-}
-
-.radio-option {
-    display: flex;
-    align-items: center;
-}
-
-.radio-option input {
-    margin-right: 5px;
 }
 
 .photo-upload {
@@ -95,62 +123,30 @@ select {
     margin: 10px auto;
     display: block;
     object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .add-photo-btn {
-    background-color: #4CAF50;
+    background-color: var(--secondary);
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 15px; /* Increased padding */
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
+    font-size: 16px; /* Increased font size */
+    transition: background-color 0.3s;
 }
 
-/* Estas reglas CSS para impresión ya no son estrictamente necesarias para la generación de PDF con jsPDF/html2canvas,
-   pero se mantienen por si se usa la función window.print() */
-.photo-page {
-    page-break-after: always;
-    text-align: center;
-    padding-top: 100px;
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.add-photo-btn:hover {
+    background-color: #45a049; /* Darker green on hover */
 }
 
-/* La marca de agua ahora se maneja directamente en jsPDF, esta regla CSS ya no es funcional para el PDF */
-.inspector-name {
-    font-size: 80px;
-    color: rgba(0, 0, 0, 0.1);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    font-weight: bold;
-    text-transform: uppercase;
-    pointer-events: none;
-}
-
-.signature-page {
-    text-align: center;
-    padding-top: 100px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: 100px;
-}
-
-.signature-img {
-    max-width: 400px;
-    margin: 20px auto;
-}
-
-.btn-generate {
-    background-color: #2196F3;
+.btn-generate,
+.btn-print,
+.btn-back {
+    background-color: var(--primary); /* Primary button color */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -158,17 +154,13 @@ select {
     cursor: pointer;
     font-size: 16px;
     margin: 20px 5px;
+    transition: background-color 0.3s; /* Smooth transition */
 }
 
-.btn-print {
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 20px 5px;
+.btn-generate:hover,
+.btn-print:hover,
+.btn-back:hover {
+    background-color: var(--primary-dark); /* Darker shade on hover */
 }
 
 .info-grid {
@@ -185,7 +177,7 @@ select {
 
 .info-label {
     font-weight: bold;
-    min-width: 200px;
+    min-width: 150px; /* Adjusted for better alignment */
 }
 
 .info-value {
@@ -202,6 +194,19 @@ select {
     white-space: nowrap;
 }
 
+@media (max-width: 600px) {
+    .info-grid {
+        grid-template-columns: 1fr; /* Stack items on smaller screens */
+    }
+
+    .btn-generate,
+    .btn-print,
+    .btn-back {
+        width: 100%; /* Full width buttons on mobile */
+        margin: 10px 0; /* Adjust margin for mobile */
+    }
+}
+
 @media print {
     .no-print {
         display: none;
@@ -211,7 +216,8 @@ select {
         padding: 0;
     }
 
-    .photo-page, .signature-page {
+    .photo-page,
+    .signature-page {
         height: 100vh;
     }
 
