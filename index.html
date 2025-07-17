@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACTA DE CONSTATACIÓN - GCBA</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Librerías para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div id="initial-selection" class="no-print">
+        <div class="logos-container">
+                <img src="Sisep-c9.png" alt="Gobierno de la Ciudad de Buenos Aires" class="logo-sisep">
+            </div>
+        <div class="header-gcba">
+            
+            <div class="logo-container">
+                <h1 class="form-title">FORMULARIO DE ACTA DE CONSTATACIÓN</h1>
+            </div>
+        </div>
+        <h1 class="watermark-title">SELECCIONE TIPO DE ACTA</h1>
+        <div class="form-section" style="margin-top: 20px;">
+            <div class="form-group">
+                <label for="acta-type-select">Tipo de Acta:</label>
+                <select id="acta-type-select">
+                    <option value="">-- Seleccione --</option>
+                    <option value="acta-verificacion">A.A Acta de Verificación</option>
+                    <option value="acta-constatacion-s-signos">A.D Acta de constatación s-signos</option>
+                    <option value="acta-constatacion-modelo">A.A Modelo Constatación</option>
+                    <option value="acta-verificacion-deposito">A.D Acta de verificación en deposito</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor para el formulario de Acta de Constatación (el que ya existe) -->
+    <div id="acta-constatacion-modelo-form" class="form-container no-print" style="display: none;">
+        <div class="header-gcba">
+            <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires">
+        </div>
+
+        <h1 class="watermark-title">FORMULARIO DE ACTA DE CONSTATACIÓN</h1>
+
+        <div class="form-section">
+            <h2>DATOS GENERALES</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">FECHA INSPECCIÓN:</span>
+                    <div class="info-value">
+                        <input type="date" id="fecha" required>
+                        <input type="time" id="hora" required style="margin-top: 5px; width: 100%;">
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Dirección:</span>
+                    <div class="info-value">
+                        <input type="text" id="direccion" required>
+                        <input type="text" id="caba" value="CABA" readonly style="margin-top: 5px; background: #f0f0f0;">
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ENTRE CALLES:</span>
+                    <div class="info-value">
+                        <input type="text" id="entre-calles">
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">RECLAMO:</span>
+                    <div class="info-value">
+                        <input type="text" id="reclamo" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">TROQUEL:</span>
+                    <div class="info-value">
+                        <input type="text" id="troquel" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Inspector:</span>
+                    <div class="info-value">
+                        <select id="inspector" required>
+                            <option value="">Seleccione un inspector</option>
+                            <option value="ROMINA MENDEZ">ROMINA MENDEZ</option>
+                            <option value="DAMIANI GABRIEL">DAMIANI GABRIEL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>VEHÍCULO</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">DOMINIO:</span>
+                    <div class="info-value">
+                        <input type="text" id="dominio" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">TIPO:</span>
+                    <div class="info-value">
+                        <input type="text" id="tipo" required>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">MARCA - MODELO:</span>
+                    <div class="info-value marca-modelo">
+                        <input type="text" id="marca" required>
+                        <span>-</span>
+                        <input type="text" id="modelo" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>ESTADO DEL VEHÍCULO</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">AUTO ABANDONADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group modern-radio">
+                            <label class="radio-option">
+                                <input type="radio" id="abandonado-si" name="abandonado" value="SI" checked>
+                                <span class="radio-label">Sí</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" id="abandonado-no" name="abandonado" value="NO">
+                                <span class="radio-label">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">HABITADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="habitado-si" name="habitado" value="SI">
+                            <label for="habitado-si">Sí</label>
+                            <input type="radio" id="habitado-no" name="habitado" value="NO" checked>
+                            <label for="habitado-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">TIENE TODAS LAS RUEDAS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="ruedas-si" name="ruedas" value="SI">
+                            <label for="ruedas-si">Sí</label>
+                            <input type="radio" id="ruedas-no" name="ruedas" value="NO" checked>
+                            <label for="ruedas-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">QUEMADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="quemado-si" name="quemado" value="SI">
+                            <label for="quemado-si">Sí</label>
+                            <input type="radio" id="quemado-no" name="quemado" value="NO" checked>
+                            <label for="quemado-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">DESMANTELADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="desmantelado-si" name="desmantelado" value="SI">
+                            <label for="desmantelado-si">Sí</label>
+                            <input type="radio" id="desmantelado-no" name="desmantelado" value="NO" checked>
+                            <label for="desmantelado-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">POSEE FALTANTES EN INTERIOR:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="faltantes-si" name="faltantes" value="SI" checked>
+                            <label for="faltantes-si">Sí</label>
+                            <input type="radio" id="faltantes-no" name="faltantes" value="NO">
+                            <label for="faltantes-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ENCADENADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="encadenado-si" name="encadenado" value="SI">
+                            <label for="encadenado-si">Sí</label>
+                            <input type="radio" id="encadenado-no" name="encadenado" value="NO" checked>
+                            <label for="encadenado-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">VIDRIOS ROTOS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="vidrios-si" name="vidrios" value="SI" checked>
+                            <label for="vidrios-si">Sí</label>
+                            <input type="radio" id="vidrios-no" name="vidrios" value="NO">
+                            <label for="vidrios-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">PINTURA DETERIORADA:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="pintura-si" name="pintura" value="SI" checked>
+                            <label for="pintura-si">Sí</label>
+                            <input type="radio" id="pintura-no" name="pintura" value="NO">
+                            <label for="pintura-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">PUERTAS ABIERTAS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="puertas-si" name="puertas" value="SI">
+                            <label for="puertas-si">Sí</label>
+                            <input type="radio" id="puertas-no" name="puertas" value="NO" checked>
+                            <label for="puertas-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">RUEDAS PINCHADAS/BAJAS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="ruedas-pinchadas-si" name="ruedas-pinchadas" value="SI" checked>
+                            <label for="ruedas-pinchadas-si">Sí</label>
+                            <input type="radio" id="ruedas-pinchadas-no" name="ruedas-pinchadas" value="NO">
+                            <label for="ruedas-pinchadas-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ACUMULA AGUA O RESIDUOS:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="residuos-si" name="residuos" value="SI" checked>
+                            <label for="residuos-si">Sí</label>
+                            <input type="radio" id="residuos-no" name="residuos" value="NO">
+                            <label for="residuos-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">MOTOR EXPUESTO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="motor-si" name="motor" value="SI">
+                            <label for="motor-si">Sí</label>
+                            <input type="radio" id="motor-no" name="motor" value="NO" checked>
+                            <label for="motor-no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">FALTANTE DE AUTOPARTES:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="autopartes-si" name="autopartes" value="SI" checked>
+                            <label for="autopartes-si">Sí</label>
+                            <input type="radio" id="autopartes-no" name="autopartes" value="NO">
+                            <label for="autopartes-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">DESCRIPCION DEL ESTADO DEL VEHICULO:</label>
+                <textarea id="descripcion" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>FOTOGRAFÍAS</h2>
+
+            <div id="photo-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="photo-upload" style="margin-bottom: 10px;">
+                    <input type="file" id="photo-upload-1" accept="image/*" class="photo-input">
+                    <img id="photo-preview-1" class="photo-preview" style="display: none;">
+                </div>
+            </div>
+
+            <button type="button" id="add-photo-btn" class="add-photo-btn">+ Añadir otra foto</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="generate-btn" class="btn-action primary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/></svg>
+                Generar PDF
+            </button>
+            <button type="button" id="print-btn" class="btn-action secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir
+            </button>
+            <button type="button" onclick="document.getElementById('initial-selection').style.display='block'; document.getElementById('acta-constatacion-modelo-form').style.display='none';" class="btn-back">Seleccionar otro tipo de acta</button>
+        </div>
+    </div>
+
+    <!-- Contenedor para el formulario de Acta de Verificación (A.A Acta de Verificacion) -->
+    <div id="acta-verificacion-form" class="form-container no-print" style="display: none;">
+        <div class="header-gcba">
+            <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires">
+        </div>
+        <h1 class="watermark-title">FORMULARIO DE ACTA DE VERIFICACIÓN</h1>
+        <div class="form-section">
+            <h2>DATOS GENERALES</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">FECHA INSPECCIÓN:</span>
+                    <div class="info-value">
+                        <input type="date" id="fecha-verificacion" required>
+                        <input type="time" id="hora-verificacion" required style="margin-top: 5px; width: 100%;">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Dirección:</span>
+                    <div class="info-value">
+                        <input type="text" id="direccion-verificacion" required>
+                        <input type="text" id="caba-verificacion" value="CABA" readonly style="margin-top: 5px; background: #f0f0f0;">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ENTRE CALLES:</span>
+                    <div class="info-value">
+                        <input type="text" id="entre-calles-verificacion">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RECLAMO:</span>
+                    <div class="info-value">
+                        <input type="text" id="reclamo-verificacion" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">TROQUEL:</span>
+                    <div class="info-value">
+                        <input type="text" id="troquel-verificacion" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Inspector:</span>
+                    <div class="info-value">
+                        <select id="inspector-verificacion" required>
+                            <option value="">Seleccione un inspector</option>
+                            <option value="ROMINA MENDEZ">ROMINA MENDEZ</option>
+                            <option value="DAMIANI GABRIEL">DAMIANI GABRIEL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>VEHÍCULO</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">DOMINIO:</span>
+                    <div class="info-value">
+                        <input type="text" id="dominio-verificacion" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">MARCA/MODELO:</span>
+                    <div class="info-value">
+                        <input type="text" id="marca-modelo-verificacion" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">COLOR:</span>
+                    <div class="info-value">
+                        <input type="text" id="color-verificacion" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">PERMANENCIA DEL VEHÍCULO EN EL LUGAR:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="permanencia-verificacion-si" name="permanencia-verificacion" value="SI">
+                            <label for="permanencia-verificacion-si">Sí</label>
+                            <input type="radio" id="permanencia-verificacion-no" name="permanencia-verificacion" value="NO" checked>
+                            <label for="permanencia-verificacion-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>OBSERVACIONES</h2>
+            <div class="form-group">
+                <label for="observaciones-verificacion">Observaciones:</label>
+                <textarea id="observaciones-verificacion" rows="6"></textarea>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>FOTOGRAFÍAS</h2>
+            <div id="photo-container-verificacion">
+                <div class="photo-upload">
+                    <input type="file" id="photo-upload-verificacion-1" accept="image/*" class="photo-input-verificacion" name="photo-upload-verificacion-1">
+                <img id="photo-preview-verificacion-1" class="photo-preview" style="display: none;" alt="Photo preview">
+                </div>
+            </div>
+            <button type="button" id="add-photo-btn-verificacion" class="add-photo-btn">+ Añadir otra foto</button>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="generate-btn-verificacion" class="btn-action primary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/></svg>
+                Generar y Descargar Acta PDF
+            </button>
+            <button type="button" id="print-btn-verificacion" class="btn-action secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir (Vista Previa)
+            </button>
+            <button type="button" onclick="document.getElementById('initial-selection').style.display='block'; document.getElementById('acta-verificacion-form').style.display='none';" class="btn-back">Seleccionar otro tipo de acta</button>
+        </div>
+    </div>
+
+    <!-- Contenedor para el formulario de Acta de Constatación s-signos (A.D Acta de constatacion s-signos) -->
+    <div id="acta-constatacion-s-signos-form" class="form-container no-print" style="display: none;">
+        <div class="header-gcba">
+            <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires">
+        </div>
+        <h1 class="watermark-title">FORMULARIO DE ACTA DE CONSTATACIÓN S/SIGNOS</h1>
+        <div class="form-section">
+            <h2>DATOS GENERALES</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">FECHA INSPECCIÓN:</span>
+                    <div class="info-value">
+                        <input type="date" id="fecha-s-signos" required>
+                        <input type="time" id="hora-s-signos" required style="margin-top: 5px; width: 100%;">
+                    </div>
+                </div>
+                <div class="info-item">
+                    
+                    <div class="info-value">
+                        
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">DIRECCIÓN:</span>
+                    <div class="info-value">
+                        <input type="text" id="direccion-s-signos" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ENTRE CALLES:</span>
+                    <div class="info-value">
+                        <input type="text" id="entre-calles-s-signos">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">CIUDAD:</span>
+                    <div class="info-value">
+                        <input type="text" id="caba-s-signos" value="CABA" readonly style="background: #f0f0f0;">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RECLAMO:</span>
+                    <div class="info-value">
+                        <input type="text" id="reclamo-s-signos" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">TROQUEL:</span>
+                    <div class="info-value">
+                        <input type="text" id="troquel-s-signos" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Inspector:</span>
+                    <div class="info-value">
+                        <select id="inspector-s-signos" required>
+                            <option value="">Seleccione un inspector</option>
+                            <option value="ROMINA MENDEZ">ROMINA MENDEZ</option>
+                            <option value="DAMIANI GABRIEL">DAMIANI GABRIEL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>VEHÍCULO</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">VEHÍCULO:</span>
+                    <div class="info-value">
+                        <input type="text" id="tipo-vehiculo-s-signos" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">EN DEPÓSITO (MÁS DE 48HS EN EL LUGAR):</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="en-deposito-s-signos-si" name="en-deposito-s-signos" value="SI">
+                            <label for="en-deposito-s-signos-si">Sí</label>
+                            <input type="radio" id="en-deposito-s-signos-no" name="en-deposito-s-signos" value="NO" checked>
+                            <label for="en-deposito-s-signos-no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">DOMINIO:</span>
+                    <div class="info-value">
+                        <input type="text" id="dominio-s-signos" value="">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">MULTA DEPÓSITO/MAL ESTACIONADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="multa-s-signos-si" name="multa-s-signos" value="SI">
+                            <label for="multa-s-signos-si">Sí</label>
+                            <input type="radio" id="multa-s-signos-no" name="multa-s-signos" value="NO" checked>
+                            <label for="multa-s-signos-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>FOTOGRAFÍAS</h2>
+            <div id="photo-container-s-signos" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="photo-upload" style="margin-bottom: 10px;">
+                    <input type="file" id="photo-upload-s-signos-1" accept="image/*" class="photo-input-s-signos" name="photo-upload-s-signos-1">
+                <img id="photo-preview-s-signos-1" class="photo-preview" style="display: none;" alt="Photo preview">
+                </div>
+            </div>
+            <button type="button" id="add-photo-btn-s-signos" class="add-photo-btn">+ Añadir otra foto</button>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="generate-btn-s-signos" class="btn-action primary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/></svg>
+                Generar y Descargar Acta PDF
+            </button>
+            <button type="button" id="print-btn-s-signos" class="btn-action secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir (Vista Previa)
+            </button>
+            <button type="button" id="back-btn-s-signos" class="btn-back" onclick="document.getElementById('initial-selection').style.display='block'; document.getElementById('acta-constatacion-s-signos-form').style.display='none';">Seleccionar otro tipo de acta</button>
+        </div>
+    </div>
+
+    <!-- Contenedor para el formulario de Acta de Verificación en Depósito (A.D Acta de verificacion en deposito) -->
+    <div id="acta-verificacion-deposito-form" class="form-container no-print" style="display: none;">
+        <div class="header-gcba">
+            <img src="gcba-logo.png" alt="Gobierno de la Ciudad de Buenos Aires">
+        </div>
+        <h1 class="watermark-title">FORMULARIO DE ACTA DE VERIFICACIÓN EN DEPÓSITO</h1>
+        <div class="form-section">
+            <h2>DATOS GENERALES</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">FECHA INSPECCIÓN:</span>
+                    <div class="info-value">
+                        <input type="date" id="fecha-deposito" required>
+                        <input type="time" id="hora-deposito" required style="margin-top: 5px; width: 100%;">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Dirección:</span>
+                    <div class="info-value">
+                        <input type="text" id="direccion-deposito" required>
+                        <input type="text" id="caba-deposito" value="CABA" readonly style="margin-top: 5px; background: #f0f0f0;">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ENTRE CALLES:</span>
+                    <div class="info-value">
+                        <input type="text" id="entre-calles-deposito">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RECLAMO:</span>
+                    <div class="info-value">
+                        <input type="text" id="reclamo-deposito" value="" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">TROQUEL:</span>
+                    <div class="info-value">
+                        <input type="text" id="troquel-deposito" value="" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Inspector:</span>
+                    <div class="info-value">
+                        <select id="inspector-deposito" required>
+                            <option value="">Seleccione un inspector</option>
+                            <option value="ROMINA MENDEZ">ROMINA MENDEZ</option>
+                            <option value="DAMIANI GABRIEL">DAMIANI GABRIEL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>VEHÍCULO</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">DOMINIO:</span>
+                    <div class="info-value">
+                        <input type="text" id="dominio-deposito" value="" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">MARCA/MODELO:</span>
+                    <div class="info-value">
+                        <input type="text" id="marca-modelo-deposito" value="" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">COLOR:</span>
+                    <div class="info-value">
+                        <input type="text" id="color-deposito" required>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">PERMANENCIA DEL VEHÍCULO EN EL LUGAR:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="permanencia-deposito-si" name="permanencia-deposito" value="SI">
+                            <label for="permanencia-deposito-si">Sí</label>
+                            <input type="radio" id="permanencia-deposito-no" name="permanencia-deposito" value="NO" checked>
+                            <label for="permanencia-deposito-no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">MULTA DEPÓSITO/MAL ESTACIONADO:</span>
+                    <div class="info-value">
+                        <div class="radio-group">
+                            <input type="radio" id="multa-deposito-si" name="multa-deposito" value="SI">
+                            <label for="multa-deposito-si">Sí</label>
+                            <input type="radio" id="multa-deposito-no" name="multa-deposito" value="NO" checked>
+                            <label for="multa-deposito-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>OBSERVACIONES</h2>
+            <div class="form-group">
+                <label for="observaciones-deposito">Observaciones:</label>
+                <textarea id="observaciones-deposito" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>FOTOGRAFÍAS</h2>
+            <div id="photo-container-deposito">
+                <div class="photo-upload">
+                    <input type="file" id="photo-upload-deposito-1" accept="image/*" class="photo-input-deposito" name="photo-upload-deposito-1">
+                <img id="photo-preview-deposito-1" class="photo-preview" style="display: none;" alt="Photo preview">
+                </div>
+            </div>
+            <button type="button" id="add-photo-btn-deposito" class="add-photo-btn">+ Añadir otra foto</button>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="generate-btn-deposito" class="btn-action primary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/></svg>
+                Generar y Descargar Acta PDF
+            </button>
+            <button type="button" id="print-btn-deposito" class="btn-action secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir (Vista Previa)
+            </button>
+            <button type="button" onclick="document.getElementById('initial-selection').style.display='block'; document.getElementById('acta-verificacion-deposito-form').style.display='none';" class="btn-back">Seleccionar otro tipo de acta</button>
+        </div>
+    </div>
+
+    <div id="acta-container" style="display: none;"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
